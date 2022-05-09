@@ -18,11 +18,11 @@ if(isset($_GET['apps'])){
     while($lpd=mysqli_fetch_array($sp)){
         $id_peg=explode("-",$lpd['id_pegawai']);
         //foreach $id_peg
-        $nama_pegawai="";
+        $nama_pegawai=array();
         foreach($id_peg as $i =>$key) {
             $pegawa=mysqli_query($connect,"select * from pegawai where id_pegawai='$key'");
             $pegawai = mysqli_fetch_assoc($pegawa);
-            $nama_pegawai .= $pegawai['nama'].", ";
+            $nama_pegawai[] = $pegawai['nama'];
         }
         $id = $lpd['id_lpd'];
         $no_spt = $lpd['no_spt'];
@@ -33,7 +33,7 @@ if(isset($_GET['apps'])){
         $dataResult[] = array(
             'id' => $id,
             'no_spt' => $no_spt,
-            'nama_pegawai' => $nama_pegawai,
+            'nama_pegawai' => implode(" - ",$nama_pegawai),
             'hasil'=>$hasil,
             'tanggal'=>$tanggal
         );
@@ -44,13 +44,7 @@ if(isset($_GET['apps'])){
     $json['data'] = $dataResult;
     //return json
     echo json_encode($json);
-}else{
-    $json['status'] = "error";
-    $json['pesan'] = 'Terjadi Kesalahan';
-    echo json_encode($json);
-}
-
-if(isset($_POST['apps'])){
+}else if(isset($_POST['edit'])){
     $id_lpd = $_POST['id_lpd'];
     $hasil = $_POST['hasil'];
     //edit table lpd
@@ -58,25 +52,59 @@ if(isset($_POST['apps'])){
     if($edit){
         $json['status'] = "sukses";
         $json['pesan'] = "Data berhasil diubah";
+        $dataResult[] = array(
+            'id' => "",
+            'no_spt' => "",
+            'nama_pegawai' => "",
+            'hasil'=>"",
+            'tanggal'=>""
+        );
+        $json['data'] = $dataResult;
         echo json_encode($json);
     }else{
         $json['status'] = "error";
         $json['pesan'] = "Data gagal diubah";
+        $dataResult[] = array(
+            'id' => "",
+            'no_spt' => "",
+            'nama_pegawai' => "",
+            'hasil'=>"",
+            'tanggal'=>""
+        );
+        $json['data'] = $dataResult;
         echo json_encode($json);
     }
-}
-
-if(isset($_POST['hapus'])){
+}else if(isset($_POST['hapus'])){
     $id_lpd = $_POST['id_lpd'];
     //hapus table lpd
     $hapus = mysqli_query($connect, "delete from lpd where id_lpd='$id_lpd'");
     if($hapus){
         $json['status'] = "sukses";
         $json['pesan'] = "Data berhasil dihapus";
+        $dataResult[] = array(
+            'id' => "",
+            'no_spt' => "",
+            'nama_pegawai' => "",
+            'hasil'=>"",
+            'tanggal'=>""
+        );
+        $json['data'] = $dataResult;
         echo json_encode($json);
     }else{
         $json['status'] = "error";
         $json['pesan'] = "Data gagal dihapus";
+        $dataResult[] = array(
+            'id' => "",
+            'no_spt' => "",
+            'nama_pegawai' => "",
+            'hasil'=>"",
+            'tanggal'=>""
+        );
+        $json['data'] = $dataResult;
         echo json_encode($json);
     }
+}else{
+    $json['status'] = "error";
+    $json['pesan'] = 'Terjadi Kesalahan';
+    echo json_encode($json);
 }

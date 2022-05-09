@@ -10,7 +10,8 @@ $json = array(
     'status' => $status,
     'pesan' => $pesan,
     'pegawai' => array(),
-    'tujuan' => array()
+    'tujuan' => array(),
+    'transportasi' => array()
 );
 //if get apps
 if(isset($_GET['apps'])){
@@ -31,11 +32,20 @@ if(isset($_GET['apps'])){
             'id'=>$id,
             'tujuan' => $tujuan);
     }
+    $trans = mysqli_query($connect, "select * from transportasi");
+    while($transportasi = mysqli_fetch_array($trans)){
+        $id = $transportasi['id_transportasi'];
+        $transportasie = $transportasi['transportasi'];
+        $datTrans []=array(
+            'id' =>$id,
+            'transportasi' => $transportasie);
+    }
     //json set
     $json['status'] = "sukses";
     $json['pesan'] = "Data berhasil diambil";
     $json['pegawai'] = $datPeg;
     $json['tujuan'] = $datTuj;
+    $json['transportasi'] = $datTrans;
     //return json
     echo json_encode($json);
 }else{

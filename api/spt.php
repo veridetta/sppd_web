@@ -17,11 +17,12 @@ if(isset($_GET['apps'])){
     $dataResult=array();
     while($spt=mysqli_fetch_array($sp)){
         $id_peg=explode("-",$spt['id_pegawai']);
+        $nama_pegawai=array();
         //foreach $id_peg
         foreach($id_peg as $i =>$key) {
             $pegawa=mysqli_query($connect,"select * from pegawai where id_pegawai='$key'");
             $pegawai = mysqli_fetch_assoc($pegawa);
-            $nama_pegawai = $pegawai['nama'];
+            $nama_pegawai[] = $pegawai['nama'];
         }
         $id = $spt['id_spt'];
         $no_spt = $spt['no_spt'];
@@ -36,7 +37,7 @@ if(isset($_GET['apps'])){
             'id'=>$id,
             'no_spt' => $no_spt,
             'id_pegawai' => $id_peg,
-            'nama_pegawai' => $nama_pegawai,
+            'nama_pegawai' => implode(" - ",$nama_pegawai),
             'tugas' => $tugas,
             'tgl_pergi' => $tgl_pergi,
             'tgl_kembali' => $tgl_kembali,

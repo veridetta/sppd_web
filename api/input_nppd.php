@@ -8,8 +8,7 @@ $pesan="";
 $status="";
 $json = array(
     'status' => $status,
-    'pesan' => $pesan,
-    'data' => array()
+    'pesan' => $pesan
 );
 if(isset($_POST['apps'])){
     $id_pegarawai = $_POST['id_pegawai'];
@@ -20,8 +19,8 @@ if(isset($_POST['apps'])){
     $id_transportasi = $_POST['id_transportasi'];
     $lama = $_POST['lama'];
     //insert nppt
-    $sql = "insert into nppt (id_pegawai, maksud, id_tujuan, tgl_pergi, tgl_kembali, id_transportasi, lama) values ('$id_pegarawai', '$maksud', '$id_tujuan', '$tgl_pergi', '$tgl_kembali', '$id_transportasi', '$lama')";
-    if($edit){
+    $sql = mysqli_query($connect,"insert into nppt (id_pegawai, maksud, id_tujuan, tgl_pergi, tgl_kembali, id_transportasi, lama, status) values ('$id_pegarawai', '$maksud', '$id_tujuan', '$tgl_pergi', '$tgl_kembali', '$id_transportasi', '$lama','Y')");
+    if($sql){
         $json['status'] = "sukses";
         $json['pesan'] = "Data berhasil ditambah";
         echo json_encode($json);
